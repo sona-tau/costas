@@ -1,23 +1,29 @@
 .POSIX:
 
-# SRC = src/*.cpp
 SRC := $(shell find src/ -type f -regex ".*\.cpp")
-CXX = clang++
+CXX = ccache clang++
 LIBS = -lm
 CXXWARNS = -pedantic -Werror -Weffc++ -Wno-padded
 CXXFLAGS = -std=c++23 $(LIBS) $(CXXWARNS)
-BLD=build/
 
-$(BLD)/a.out: $(SRC)
+build/a.out: $(SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-run: $(BLD)/a.out
-	./$(BLD)/a.out
+run: build/a.out
+	./build/a.out
 
 format:
-	clang-format -i src/*
+	clang-format -i $(shell find src/ -type f)
 
 .PHONY: clean
 
 clean:
-	rm -f $(BLD)/*
+	rm -f build/*
+
+check:
+	cppcheck . --check-level=exhaustive
+	clang-tidy $(shell find src/ -type f) -- -std=c++23
+
+test: $(SRC)
+	$(CXX) $(CXXFLAGS) -o ./build/a.out $^ -DTEST
+	./build/a.out
