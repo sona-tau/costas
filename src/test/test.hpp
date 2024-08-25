@@ -1,10 +1,10 @@
 #pragma once
-#include <string>
 #include <cstdint>
-#include <iostream>
 #include <exception>
 #include <format>
-using CString = const char *;
+#include <iostream>
+#include <string>
+using CString = const char*;
 using U64 = std::uint64_t;
 using String = std::string;
 
@@ -17,10 +17,10 @@ auto format_err(String const& test_name) noexcept -> String;
 class Test {
     String test_name;
 
-    public:
+  public:
     Test(CString name);
 
-    Test& operator = (auto f) {
+    Test& operator=(auto f) {
         if (f()) {
             std::cout << test_name << ": passed" << std::endl;
         } else {
@@ -30,10 +30,9 @@ class Test {
         return *this;
     }
 
+    Test& operator=(std::initializer_list<bool> checks);
 
-    Test& operator = (std::initializer_list<bool> checks);
-
-    Test& operator = (bool passed);
+    Test& operator=(bool passed);
 };
 
-Test operator ""_test(CString str, U64 length);
+Test operator""_test(CString str, U64 length);

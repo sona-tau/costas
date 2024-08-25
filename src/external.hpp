@@ -1,7 +1,8 @@
 #pragma once
 #include "lib/prelude.hpp"
 
-fn power(I32 a, I32 n, I32 mod) noexcept -> I64;
+namespace ext {
+fn power(I64 a, I32 n, I32 mod) noexcept -> I64;
 
 fn witness(I32 a, I32 n) noexcept -> Bool;
 
@@ -21,8 +22,7 @@ fn inline is_prime(Int number) noexcept -> Bool {
 
     if (number < 1373653) {
         for (Int k = 1; 36 * k * k - 12 * k < number; ++k)
-            if (number % (6 * k + 1) == 0 ||
-                (number % 6 * k - 1) == 0)
+            if (number % (6 * k + 1) == 0 || (number % 6 * k - 1) == 0)
                 return false;
 
         return true;
@@ -44,3 +44,4 @@ fn inline is_prime(Int number) noexcept -> Bool {
         return false;
     return true;
 }
+} // namespace ext
