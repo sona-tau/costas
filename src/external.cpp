@@ -1,16 +1,16 @@
 #include "external.hpp"
 #include "lib/prelude.hpp"
 
-// Code taken from: https://stackoverflow.com/a/4424496
-fn power(I32 a, I32 n, I32 mod) noexcept -> I64 {
-    I64 power = I64(a);
+namespace ext {
+// power, witness and is_prime taken from: https://stackoverflow.com/a/4424496
+fn power(I64 power, I32 base, I32 mod) noexcept -> I64 {
     I64 result = I64(1);
 
-    while (n) {
-        if (n & 1)
+    while (base) {
+        if (base & 1)
             result = (result * power) % mod;
         power = (power * power) % mod;
-        n >>= 1;
+        base >>= 1;
     }
     return result;
 }
@@ -39,3 +39,4 @@ fn witness(I32 a, I32 n) noexcept -> Bool {
         return true;
     return false;
 }
+} // namespace ext
