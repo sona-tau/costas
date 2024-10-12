@@ -1,0 +1,5 @@
+Checks: '-*,bugprone-exception-escape' 
+CheckOptions: 
+    - key: bugprone-exception-escape.FunctionsThatShouldNotThrow
+      value: main
+HeaderFilterRegex: '.*'
