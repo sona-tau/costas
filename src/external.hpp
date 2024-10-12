@@ -2,9 +2,43 @@
 #include "lib/prelude.hpp"
 
 namespace ext {
-fn power(I64 a, I32 n, I32 mod) noexcept -> I64;
+// power, witness and is_prime taken from: https://stackoverflow.com/a/4424496
+fn constexpr power(I64 power, I32 base, I32 mod) noexcept -> I64 {
+    I64 result = I64(1);
 
-fn witness(I32 a, I32 n) noexcept -> Bool;
+    while (base) {
+        if (base & 1)
+            result = (result * power) % mod;
+        power = (power * power) % mod;
+        base >>= 1;
+    }
+    return result;
+}
+
+fn constexpr witness(I32 a, I32 n) noexcept -> Bool {
+    I32 t, u, i;
+    I64 prev, curr;
+
+    u = n / 2;
+    t = 1;
+    while (!(u & 1)) {
+        u /= 2;
+        ++t;
+    }
+
+    prev = power(a, u, n);
+    // [[assume(i <= t)]];
+    for (i = 1; i <= t; ++i) {
+        curr = (prev * prev) % n;
+        if (curr == 1 && prev != 1 && prev != n - 1)
+            return true;
+        prev = curr;
+    }
+
+    if (curr != 1)
+        return true;
+    return false;
+}
 
 /* WARNING: Algorithm deterministic only for numbers < 4,759,123,141 (unsigned
  * int's max is 4294967296) if n < 1,373,653, it is enough to test a = 2 and 3.
