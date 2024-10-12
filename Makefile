@@ -3,8 +3,8 @@
 SRC := $(shell find src/ -type f -regex ".*\.cpp")
 CXX = ccache clang++
 LIBS = -lm
-CXXWARNS = -pedantic -Werror -Weffc++ -Wno-padded
-CXXFLAGS = -std=c++23 $(LIBS) $(CXXWARNS)
+CXXWARNS = -pedantic -Werror -Weffc++ -Wno-padded -Ofast
+CXXFLAGS = -std=c++2c $(LIBS) $(CXXWARNS) -fopenmp
 
 build/a.out: $(SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $^
