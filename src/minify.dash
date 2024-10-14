@@ -1,0 +1,9 @@
+#!/usr/bin/env dash
+
+set -xe
+
+for FILE in costas_*
+do
+    NAME="${FILE%.txt}"
+    tr -d ' \n' < "$FILE" > "$NAME.min.txt"
+done
