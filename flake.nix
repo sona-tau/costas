@@ -29,8 +29,9 @@
             lcov
             vcpkg
             vcpkg-tool
-          ccache
-          llvmPackages_12.openmp
+            ccache
+            llvmPackages_12.openmp
+            dash
           ] ++ (if system == "aarch64-darwin" then [ ] else [ gdb ]);
         };
       });
