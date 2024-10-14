@@ -24,6 +24,8 @@ fn is_permutation_matrix(Vec<UInt> a) noexcept -> Bool {
     return true;
 }
 
+// TODO: (fix): When is_costas receives a non-const qualified vector it may
+// return an incorrect result.
 fn is_costas(Vec<UInt> const& vec) -> Bool {
     using Set = std::unordered_set<UInt>;
 
@@ -32,7 +34,7 @@ fn is_costas(Vec<UInt> const& vec) -> Bool {
 
     bool flag = false;
     auto const l = vec.size() / 2 + 2;
-#pragma omp parallel for num_threads(16) shared(flag)
+#pragma omp parallel for shared(flag)
     for (Size h = 1; h < l; ++h) {
         if (flag)
             continue;
@@ -51,16 +53,12 @@ fn is_costas(Vec<UInt> const& vec) -> Bool {
 }
 
 fn costas_nxn(Vec<UInt> v) -> Vec<Vec<UInt>> {
-    // auto const max_size = factorial[v.size() + 4];
     auto out = Vec<Vec<UInt>>();
-    // out.reserve(factorial[v.size() + 1]);
     ra::sort(v);
 
     do {
-        // print(v);
-        if (is_costas((const Vec<UInt>)v)) {
+        if (is_costas((const Vec<UInt>)v))
             out.push_back(v);
-        }
     } while (std::next_permutation(v.begin(), v.end()));
 
     return out;
