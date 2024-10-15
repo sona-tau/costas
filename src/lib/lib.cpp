@@ -24,32 +24,27 @@ fn is_permutation_matrix(Vec<UInt> a) noexcept -> Bool {
     return true;
 }
 
-// TODO: (fix): When is_costas receives a non-const qualified vector it may
-// return an incorrect result.
 fn is_costas(Vec<UInt> const& vec) -> Bool {
     using Set = std::unordered_set<UInt>;
 
     if (Set(vec.cbegin(), vec.cend()).size() != vec.size())
         return false;
 
-    bool flag = false;
-    auto const l = vec.size() / 2 + 2;
-#pragma omp parallel for shared(flag)
-    for (Size h = 1; h < l; ++h) {
+    let n = vec.size();
+    var flag = false;
+    for (Size k = 1; k < n; ++k) {
         if (flag)
-            continue;
-        var set = Set(l - h);
-        for (Size i = h - 1; i < l - 1; ++i) {
-            let result = vec[(h + i) % l] - vec[i];
-            if (set.contains(result)) {
-#pragma omp atomic write
+            break;
+        var seen = Vec<Bool>(2 * n, false);
+        for (Size i = 0; i < n - k; ++i) {
+            let result = Int(vec[(i + k) % n]) - Int(vec[i]) + Int(n);
+            if (not seen[result]) {
                 flag = true;
                 break;
             }
-            set.insert(vec[(h + i) % l] - vec[i]);
         }
     }
-    return !flag;
+    return flag;
 }
 
 fn costas_nxn(Vec<UInt> v) -> Vec<Vec<UInt>> {
