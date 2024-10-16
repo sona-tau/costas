@@ -59,6 +59,17 @@ fn costas_nxn(Vec<UInt> v) -> Vec<Vec<UInt>> {
     return out;
 }
 
+fn build_all_naive(Vec<UInt> const& vec, UInt x) -> Vec<Vec<UInt>> {
+    var out = Vec<Vec<UInt>>();
+    for (Size i = 0; i < vec.size(); ++i) {
+        var lst2 = vec;
+        lst2.insert(lst2.begin() + i, x);
+        if (is_costas(lst2))
+            out.push_back(lst2);
+    }
+    return out;
+}
+
 void print(Vec<UInt> const& v) {
     for (var x : v)
         std::cout << x << ' ';
