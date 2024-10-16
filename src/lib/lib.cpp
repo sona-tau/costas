@@ -5,7 +5,11 @@
 #include <iostream>
 #include <unordered_set>
 
+/*
+ * Complexity: O(n^2)
+ */
 fn is_permutation_matrix(Vec<UInt> a) noexcept -> Bool {
+    // Complexity: O(n)
     let h = [&](Size stride) {
         // NOTE: std::unordered_set cannot be constexpr, therefore this
         // function is not constexpr.
@@ -24,6 +28,9 @@ fn is_permutation_matrix(Vec<UInt> a) noexcept -> Bool {
     return true;
 }
 
+/*
+ * Complexity: O(n^2)
+ */
 fn is_costas(Vec<UInt> const& vec) -> Bool {
     using Set = std::unordered_set<UInt>;
 
@@ -47,6 +54,9 @@ fn is_costas(Vec<UInt> const& vec) -> Bool {
     return flag;
 }
 
+/*
+ * Complexity: O((n^2)!)
+ */
 fn costas_nxn(Vec<UInt> v) -> Vec<Vec<UInt>> {
     auto out = Vec<Vec<UInt>>();
     ra::sort(v);
@@ -59,6 +69,9 @@ fn costas_nxn(Vec<UInt> v) -> Vec<Vec<UInt>> {
     return out;
 }
 
+/*
+ * Complexity: O(n^3)
+ */
 fn build_all_naive(Vec<UInt> const& vec, UInt x) -> Vec<Vec<UInt>> {
     var out = Vec<Vec<UInt>>();
     for (Size i = 0; i < vec.size(); ++i) {
@@ -70,6 +83,9 @@ fn build_all_naive(Vec<UInt> const& vec, UInt x) -> Vec<Vec<UInt>> {
     return out;
 }
 
+/*
+ * Complexity: O(n)
+ */
 void print(Vec<UInt> const& v) {
     for (var x : v)
         std::cout << x << ' ';
