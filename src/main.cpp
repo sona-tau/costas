@@ -31,7 +31,7 @@ fn main() noexcept -> int {
     for (var n = 2; n < 30; ++n) {
         var vec = Vec<UInt>(n);
         ra::iota(vec, 1);
-        let nxn = costas_nxn(vec);
+        let nxn = costas_nxn<UInt>(vec);
 
         std::ofstream file;
         file.open(std::format("costas_{}x{}.txt", n, n));
