@@ -4,6 +4,17 @@
 #include <cmath>
 #include <iterator>
 #include <ranges>
+#include <iostream>
+#include <unordered_set>
+
+using MI64 = std::optional<I64>;
+using MInt = std::optional<Int>;
+using MUInt = std::optional<UInt>;
+
+namespace ra = std::ranges;
+namespace vi = std::ranges::views;
+
+using namespace std::string_literals;
 
 double const
     factorial[171] =
@@ -33,7 +44,6 @@ fn constexpr mod_pow_bin(I64 base, I64 exp, I64 m) noexcept -> I64 {
                 ret = (ret * base) % m;
             base = (base * base) % m;
         }
-
     return ret;
 }
 
@@ -75,8 +85,6 @@ fn constexpr lempel(UInt p) noexcept -> Vec<Vec<Char>> {
     return ret;
 }
 
-template <class T> fn is_permutation_matrix(Vec<T> a) noexcept -> Bool;
-
 template <ra::input_range R, class T, class Proj = std::identity>
     requires std::indirect_binary_predicate<
                  ra::equal_to, std::projected<ra::iterator_t<R>, Proj>,
@@ -90,13 +98,90 @@ fn constexpr permutations(Vec<UInt> vec)->Vec<Vec<UInt>> {
     Vec<Vec<UInt>> out;
     ra::sort(vec);
     out.push_back(vec);
-
     while (std::next_permutation(vec.begin(), vec.end()))
         out.push_back(vec);
-
     return out;
 }
 
-template <class T> fn costas_nxn(Vec<T> v) -> Vec<Vec<T>>;
+/*
+ * Complexity: O(n^2)
+ */
+template <class T> fn is_permutation_matrix(Vec<T> a) noexcept -> Bool {
+    let h = [&](Size stride) {
+        // NOTE: std::unordered_set cannot be constexpr, therefore this
+        // function is not constexpr.
+        std::unordered_set<UInt> u;
+        var size = 0;
+        for (let& e : a | vi::stride(stride) | vi::slide(2))
+            u.insert(e[0] - e[1]), ++size;
+        return u.size() == size;
+    };
+    Vec<Size> arr(a.size());
+    ra::iota(arr, 1);
+    for (let i : arr)
+        if (not h(i))
+            return false;
+    return true;
+}
 
-template <class T> void print(Vec<T> const& v);
+/*
+ * Complexity: O(n^2)
+ */
+template <class T> fn is_costas(Vec<T> const& vec) -> Bool {
+    using Set = std::unordered_set<T>;
+    if (Set(vec.cbegin(), vec.cend()).size() != vec.size())
+        return false;
+    let n = vec.size();
+    var flag = false;
+    for (Size k = 1; k < n; ++k) {
+        if (flag)
+            break;
+        var seen = Vec<Bool>(2 * n, false);
+        for (Size i = 0; i < n - k; ++i) {
+            let result = Int(vec[(i + k) % n]) - Int(vec[i]) + Int(n);
+            if (not seen[result]) {
+                flag = true;
+                break;
+            }
+        }
+    }
+    return flag;
+}
+
+/*
+ * Complexity: O((n^2)!)
+ */
+template <class T> fn costas_nxn(Vec<T> v) -> Vec<Vec<T>> {
+    auto out = Vec<Vec<T>>();
+    ra::sort(v);
+    do {
+        if (is_costas<T>((const Vec<T>)v))
+            out.push_back(v);
+    } while (std::next_permutation(v.begin(), v.end()));
+    return out;
+}
+
+/*
+ * Complexity: O(n^3)
+ */
+template <class T> fn build_all_naive(Vec<T> const& vec, T x) -> Vec<Vec<T>> {
+    var out = Vec<Vec<T>>();
+    for (Size i = 0; i < vec.size(); ++i) {
+        var lst2 = vec;
+        lst2.insert(lst2.begin() + i, x);
+        if (is_costas(lst2))
+            out.push_back(lst2);
+    }
+    return out;
+}
+
+/*
+ * Complexity: O(n)
+ */
+template <class T> void print(Vec<T> const& v) {
+    var comma = ""s;
+    std::cout << '[';
+    for (let& x : v)
+        std::cout << comma << x, comma = ",";
+    std::cout << ']' << std::endl;
+}
