@@ -139,10 +139,12 @@ template <class T> fn is_costas(Vec<T> const& vec) -> Bool {
         var seen = Vec<Bool>(2 * n, false);
         for (Size i = 0; i < n - k; ++i) {
             let result = Int(vec[(i + k) % n]) - Int(vec[i]) + Int(n);
-            if (not seen[result]) {
-                flag = true;
-                break;
+            if (seen[result]) {
+                return false;
+            } else {
+                seen[result] = true;
             }
+            flag = seen[result];
         }
     }
     return flag;
