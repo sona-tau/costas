@@ -28,11 +28,10 @@ void static foo() noexcept {
 
 fn main() noexcept -> int {
 #ifndef TEST
-    for (var n = 2; n < 30; ++n) {
+    for (var n = 2; n < 13; ++n) {
         var vec = Vec<UInt>(n);
         ra::iota(vec, 1);
         let nxn = costas_nxn<UInt>(vec);
-
         std::ofstream file;
         file.open(std::format("costas_{}x{}.txt", n, n));
         file << "[\n";
