@@ -15,6 +15,7 @@
                 default = pkgs.mkShell {
                     venvDir = "venv";
                     packages = with pkgs; [
+                        julia-bin
                         clang-tools
                         clang
                         cmake
@@ -31,10 +32,10 @@
                         dash
                         # Python dependencies
                         sage
-                        python311
+                        python312
+                        python312Packages.ipykernel
                         python312Packages.pip
                         python312Packages.venvShellHook
-                        python312Packages.cython
                         python312Packages.numpy
                         python312Packages.matplotlib
                         python312Packages.jupyter-core
