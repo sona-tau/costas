@@ -2,14 +2,10 @@
 #include "prelude.hpp"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <iterator>
 #include <ranges>
-#include <iostream>
 #include <unordered_set>
-
-using MI64 = std::optional<I64>;
-using MInt = std::optional<Int>;
-using MUInt = std::optional<UInt>;
 
 namespace ra = std::ranges;
 namespace vi = std::ranges::views;
@@ -124,10 +120,68 @@ template <class T> fn is_permutation_matrix(Vec<T> a) noexcept -> Bool {
     return true;
 }
 
+template <class T> class MInt {
+    union {
+        T x;
+        Char ch;
+    };
+    enum { Asterisk, Integer } tag;
+
+    MInt(T y) : x(y), tag(MInt::Integer) {
+    }
+
+    MInt(Char c) : ch(c), tag(MInt::Asterisk) {
+    }
+
+    MInt() : ch('*'), tag(MInt::Asterisk) {
+    }
+
+    fn operator==(Char c)->Bool {
+        return tag == MInt::Asterisk ? ch == c : false;
+    }
+
+    fn operator==(T y)->Bool {
+        return tag == MInt::Integer ? x == y : false;
+    }
+
+    fn operator-(Char c)->MInt<T> {
+        return MInt(c);
+    }
+
+    fn operator-(T y)->MInt<T> {
+        if (tag == MInt::Asterisk) {
+            return *this;
+        } else {
+            return MInt(x - y);
+        }
+    }
+
+    fn operator+(Char c)->MInt<T> {
+        return MInt(c);
+    }
+
+    fn operator+(T y)->MInt<T> {
+        if (tag == MInt::Asterisk) {
+            return *this;
+        } else {
+            return MInt(x + y);
+        }
+    }
+};
+
+template <class T> fn default_predicate(T x, T y, T n) -> T {
+    return x - y + n;
+}
+
+template <class T> fn empty_column(T x, T y, T n) -> T {
+    return x == '*' or y == '*' ? n : x - y + n;
+}
+
 /*
  * Complexity: O(n^2)
  */
-template <class T> fn is_costas(Vec<T> const& vec) -> Bool {
+template <class T>
+fn is_costas(Vec<T> const& vec, auto f = default_predicate) -> Bool {
     using Set = std::unordered_set<T>;
     if (Set(vec.cbegin(), vec.cend()).size() != vec.size())
         return false;
@@ -138,10 +192,12 @@ template <class T> fn is_costas(Vec<T> const& vec) -> Bool {
             break;
         var seen = Vec<Bool>(2 * n, false);
         for (Size i = 0; i < n - k; ++i) {
-            let result = Int(vec[(i + k) % n]) - Int(vec[i]) + Int(n);
+            let a = Int(vec[(i + k) % n]);
+            let b = Int(vec[i]);
+            let result = f(a, b, Int(n));
             if (seen[result]) {
                 return false;
-            } else {
+            } else if (result != n) {
                 seen[result] = true;
             }
             flag = seen[result];
