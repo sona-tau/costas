@@ -30,6 +30,7 @@
                         ccache
                         llvmPackages_12.openmp
                         dash
+                        z3
                         # Python dependencies
                         sage
                         python312
@@ -41,6 +42,7 @@
                         python312Packages.jupyter-core
                         python312Packages.jupyterlab
                         python312Packages.nbformat
+                        python312Packages.z3-solver
                     ] ++ (if system == "aarch64-darwin" then [ ] else [ gdb ]);
                 };
         });
