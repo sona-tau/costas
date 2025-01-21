@@ -15,7 +15,7 @@ run: build/a.out
 format:
 	clang-format -i $(shell find src/ -type f)
 
-.PHONY: clean
+.PHONY: clean build/a.out
 
 clean:
 	rm -f build/*
