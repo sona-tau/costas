@@ -16,7 +16,7 @@ end
 
 # Check if a sequence is a Costas sequence with debug information
 function iscostas(lst::Vector{T}, f::Function = normal_predicate)::Union{Unit, Tuple{Tuple{Int64, Int64}, Tuple{Int64, Int64}}} where T
-    n::Integer = length(lst)
+    n::Int64 = length(lst)
     for k in 1:n
         diffs::Vector{Tuple{Bool, Tuple{Int64, Int64}}} = [(false, (-1,-1)) for _ in 1:2 * n]
         for i in 1:(n - k)
@@ -34,7 +34,7 @@ function iscostas(lst::Vector{T}, f::Function = normal_predicate)::Union{Unit, T
 end
 
 using Base.Threads
-function searchallt(n::Integer)::Vector{Vector{Integer}}
+function searchallt(n::Int64)::Vector{Vector{Int64}}
     p1::Int64 = 0
     p2::Int64 = 0
     p3::Int64 = 0
@@ -43,20 +43,18 @@ function searchallt(n::Integer)::Vector{Vector{Integer}}
     i2::Int64 = 0
     i3::Int64 = 0
     i4::Int64 = 0
-    acc::Vector{Vector{Vector{Integer}}} = [[] for _ in 1:nthreads()]
+    acc::Vector{Vector{Vector{Int64}}} = [[] for _ in 1:nthreads()]
 
     @threads :static for i in 1:factorial(n)
         tid::Int64 = threadid()
         lst::Vector{Int64} = nthperm(1:n, i)
         if (i1 != 0 && p1 == lst[i1]) && (i2 != 0 && p2 == lst[i2]) && (i3 != 0 && p3 == lst[i3]) && (i4 != 0 && p4 == lst[i4])
-            #println("miss: ", lst)
             continue
         end
-        result = iscostasdbg(lst)
+        result = iscostas(lst)
         if result isa Unit
             push!(acc[tid], lst)
         else
-            #println("fail: ", lst, "; ", result)
             (i1, i2), (i3, i4) = result
             p1, p2, p3, p4 = lst[i1], lst[i2], lst[i3], lst[i4]
         end
@@ -64,7 +62,7 @@ function searchallt(n::Integer)::Vector{Vector{Integer}}
     reduce(vcat, acc)
 end
 
-function searchall(n::Integer)::Vector{Vector{Integer}}
+function searchall(n::Int64)::Vector{Vector{Int64}}
     p1::Int64 = 0
     p2::Int64 = 0
     p3::Int64 = 0
@@ -73,14 +71,14 @@ function searchall(n::Integer)::Vector{Vector{Integer}}
     i2::Int64 = 0
     i3::Int64 = 0
     i4::Int64 = 0
-    acc::Vector{Vector{Vector{Integer}}} = []
+    acc::Vector{Vector{Int64}} = []
 
     for i in 1:factorial(n)
         lst::Vector{Int64} = nthperm(1:n, i)
         if (i1 != 0 && p1 == lst[i1]) && (i2 != 0 && p2 == lst[i2]) && (i3 != 0 && p3 == lst[i3]) && (i4 != 0 && p4 == lst[i4])
             continue
         end
-        result = iscostasdbg(lst)
+        result = iscostas(lst)
         if result isa Unit
             push!(acc, lst)
         else
@@ -143,13 +141,13 @@ function searchone(n::Integer)::Union{Nothing, Vector{Integer}}
     return nothing
 end
 
-const START = 10
-const LIMIT = 20
-
-for n in (START + 1):LIMIT
-    out = searchdbg(n)
-    file_path = "costas_$(n)x$n.dat"
-    serialize(file_path, out)
-    println("$file_path has $(length(out)) arrays.")
-end
-
+# const START = 10
+# const LIMIT = 20
+# 
+# for n in (START + 1):LIMIT
+#     out = searchdbg(n)
+#     file_path = "costas_$(n)x$n.dat"
+#     serialize(file_path, out)
+#     println("$file_path has $(length(out)) arrays.")
+# end
+# 
