@@ -15,34 +15,35 @@
                 default = pkgs.mkShell {
                     venvDir = "venv";
                     packages = with pkgs; [
-                        julia-bin
-                        clang-tools
+                        ccache
                         clang
+                        clang-tools
                         cmake
                         codespell
                         conan
                         cppcheck
+                        dash
                         doxygen
+                        git-lfs
                         gtest
+                        julia-bin
                         lcov
+                        llvmPackages_12.openmp
                         vcpkg
                         vcpkg-tool
-                        ccache
-                        llvmPackages_12.openmp
-                        dash
                         z3
                         # Python dependencies
-                        sage
                         python312
                         python312Packages.ipykernel
-                        python312Packages.pip
-                        python312Packages.venvShellHook
-                        python312Packages.numpy
-                        python312Packages.matplotlib
                         python312Packages.jupyter-core
                         python312Packages.jupyterlab
+                        python312Packages.matplotlib
                         python312Packages.nbformat
+                        python312Packages.numpy
+                        python312Packages.pip
+                        python312Packages.venvShellHook
                         python312Packages.z3-solver
+                        sage
                     ] ++ (if system == "aarch64-darwin" then [ ] else [ gdb ]);
                 };
         });
