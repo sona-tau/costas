@@ -3,4 +3,4 @@ build/*
 results/*
 venv/*
 __pycache__/*
-src/jupyter/.ipynb_checkpoints/*
+src/jupyter/__pycache__/*
