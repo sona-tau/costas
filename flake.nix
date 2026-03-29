@@ -32,7 +32,9 @@
                         vcpkg
                         vcpkg-tool
                         z3
+						ihaskell
                         # Python dependencies
+						codebraid
                         python312
                         python312Packages.ipykernel
                         python312Packages.jupyter-core
