@@ -1,4 +1,46 @@
 using Transducers
+import Serialization
+
+savevar(file_path::String, a) = Serialization.serialize(file_path, a)
+loadvar(file_path::String) = Serialization.deserialize(file_path)
+
+function v(l::AbstractVector{<:Integer})::Vector{Int}
+    length(l) + 1 .- l
+end
+
+function t(l::AbstractVector{<:Integer})::Vector{Int}
+    invperm(l)
+end
+
+function r(l::AbstractVector{<:Integer})::Vector{Int}
+    l |> t |> v
+end
+
+function canon(a::Vector{<:Integer})::Vector{Int}
+    a0 = a
+    a1 = a0 |> r
+    a2 = a1 |> r
+    a3 = a2 |> r
+    a4 = a0 |> t
+    a5 = a1 |> t
+    a6 = a2 |> t
+    a7 = a3 |> t
+    minimum([a0, a1, a2, a3, a4, a5, a6, a7])
+end
+
+function isequiv(e::Vector{<:Integer}, a::Vector{<:Integer})::Bool
+    canon(e) == canon(a)
+end
+
+function classes(c::Vector{Vector{Int}})::Vector{Vector{Integer}}
+    cls = []
+    for l::Vector{Int} in c
+        if all(canon(l) != class for class in cls)
+            push!(cls, canon(l))
+        end
+    end
+    cls
+end
 
 function topoints(l::Vector{<:Integer})::Vector{Tuple{Int, Int}}
     l |> enumerate |> Filter(a -> a[2] != 0) |> collect
