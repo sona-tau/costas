@@ -1,7 +1,20 @@
-build/*
-.direnv/*
-results/*
-venv/*
-__pycache__/*
+# Nix
+result
+result-*
+
+# Julia
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+Manifest.toml
+
+# C++
+.build/
+
+# Direnv
+.direnv/
+
+# Python
+venv/
+**/__pycache__/
 **/.ipynb_checkpoints/*
-src/jupyter/__pycache__/*
