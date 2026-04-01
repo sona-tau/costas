@@ -11,16 +11,32 @@ import Serialization
 savevar(file_path::String, a) = Serialization.serialize(file_path, a)
 loadvar(file_path::String) = Serialization.deserialize(file_path)
 
-function load_costas(specs)
+function fromtxt(s::String)::Vector{Vector{Int}}
+    map.(Base.Fix1(parse, Int), split.(split(s, "\n"), " "))
+end
+
+function totxt(c::Vector{Vector{Integer}})::String
+    join(join.(c, " "), "\n")
+end
+
+function opencostas(fpath::String)::Vector{Vector{Int}}
+    out::Vector{Vector{Int}} = Vector{Vector{Int}}()
+    open(fpath, "r") do file
+        out = fromtxt(read(file, String))
+    end
+    out
+end
+
+function load_costas(specs, datadir::String)
     Dict(spec => begin
         kind, m, n = spec
 
-        file_path =
-            kind == :all    ? "costas_$(m)x$(n).dat" :
-            kind == :orbits || kind == :classes ? "classes_$(m)x$(n).dat" :
-            error("Unknown kind: $kind")
+        file_path = datadir * (
+            kind == :all    ? "costas_$(m)x$(n).txt" :
+            kind == :orbits || kind == :classes ? "classes_$(m)x$(n).txt" :
+            error("Unknown kind: $kind"))
 
-        out = loadvar(file_path)
+        out = opencostas(file_path)
         println(file_path, " has ", length(out), " arrays.")
         out
     end for spec in specs)
