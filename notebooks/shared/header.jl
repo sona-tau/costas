@@ -4,6 +4,11 @@ f2 = Base.Fix2
 
 # --- Functions ---
 
+import Serialization
+
+savevar(file_path::String, a) = Serialization.serialize(file_path, a)
+loadvar(file_path::String) = Serialization.deserialize(file_path)
+
 function windows(z, w)
     ((@view z[i:i + w - 1]) for i in 1:length(z) - w + 1)
 end
