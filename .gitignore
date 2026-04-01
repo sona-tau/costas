@@ -16,5 +16,6 @@ Manifest.toml
 
 # Python
 venv/
-**/__pycache__/
-**/.ipynb_checkpoints/*
+__pycache__/
+.ipynb_checkpoints/
+.
