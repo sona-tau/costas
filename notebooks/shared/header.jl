@@ -6,13 +6,8 @@ f2 = Base.Fix2
 
 # --- Functions ---
 
-<<<<<<< Updated upstream:notebooks/shared/header.jl
 import Serialization
 
-savevar(file_path::String, a) = Serialization.serialize(file_path, a)
-loadvar(file_path::String) = Serialization.deserialize(file_path)
-||||||| Stash base:src/jupyter/header.jl
-=======
 savevar(file_path::String, a) = Serialization.serialize(file_path, a)
 loadvar(file_path::String) = Serialization.deserialize(file_path)
 
@@ -30,7 +25,6 @@ function load_costas(specs)
         out
     end for spec in specs)
 end
->>>>>>> Stashed changes:src/jupyter/header.jl
 
 function windows(z, w)
     ((@view z[i:i + w - 1]) for i in 1:length(z) - w + 1)
