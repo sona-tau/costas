@@ -154,7 +154,7 @@ end
 
 function searchbt(n::Int)::Vector{Vector{Int}}
     solutions::Vector{Vector{Int}} = Vector{Vector{Int}}()
-    searchBT!(solutions, new_state(n))
+    searchBT!(solutions, newstate(n))
     return solutions
 end
 
