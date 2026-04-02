@@ -11,6 +11,8 @@ import Serialization
 savevar(file_path::String, a) = Serialization.serialize(file_path, a)
 loadvar(file_path::String) = Serialization.deserialize(file_path)
 
+data_dir = get(ENV, "COSTAS_DATA", joinpath(@__DIR__, "../data"))
+
 function fromtxt(s::String)::Vector{Vector{Int}}
     map.(Base.Fix1(parse, Int), split.(split(s, "\n"), " "))
 end
