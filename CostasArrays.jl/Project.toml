@@ -1,0 +1,10 @@
+name = "CostasArrays"
+uuid = "5c5e4aff-1c64-4f1a-9481-87489cf2de4b"
+version = "0.1.0"
+authors = ["Sona Tau Estrada Rivera <sona@stau.space>"]
+
+[deps]
+Transducers = "28d57a85-8fef-5791-bfe6-a80928e7c999"
+
+[compat]
+julia = "1.10"
