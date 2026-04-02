@@ -29,6 +29,73 @@ interesting as pure combinatorial objects.
 Plain text files, one array per line, space-separated integers. Each line is a
 permutation of $1, 2, \dots, n$ that satisfies the Costas property.
 
+```txt
+1 2 4 8 5 10 9 7 3 6
+1 2 5 7 3 10 9 6 4 8
+```
+
+There is not a newline at the end of the file. This makes it easier to parse:
+1. open the file as a really long string
+2. split the string on newlines
+3. split each string on spaces
+4. parse each string as an integer
+
+In there, you will find ASCII text files:
+- `costas_NxN.txt` all Costas arrays of order N
+- `classes_NxN.txt` all equivalence classes under the dihedral group D4[1]
+- `stabilizers_NxN.txt` arrays that get fixed by at least one non-identity
+element of D4
+
+- [1]: the equivalence classes are a single array, in this case, the array with
+the smallest lexicographic value
+
+### Non-square arrays
+
+This might be a bit strange since Costas arrays of order N have to have N
+points. In this case, this is a list very similar to the previous, but without
+the entry: $1$. Because of this, the files are labeled `costas_(N-1)xN.txt`.
+
+
+### Source (`src/`)
+
+- `src/cpp` has a C++ implementation for the search and Costas property[2]
+- `src/julia` has a Julia implementation for the search and also utilities for
+classification
+- `src/python` helpful tools for dealing with files[2]
+
+- [2]: these files are somewhat old and most of the project deals with Julia
+now.
+
+### Jupyter Notebooks (`notebooks/`)
+
+The Jupyter notebooks in this project are used for general research and to
+play around with the data. No polished documents as of yet - 2026-04-01.
+
+## Data
+
+Simply split on each line and then split on spaces. For example, in Julia you
+would do something like:
+
+```julia
+parseint = Base.Fix1(parse, int)
+
+costas_10x10 = map.(parseint, split.(eachline("data/costas_10x10.txt")))
+```
+
+## Verify the data
+
+```bash
+sha256sum --check SHA256SUMS
+```
+
+## Building
+
+```bash
+nix develop # This pulls in all the data
+make        # This builds the C++ search engine
+```
+
+## Counts
 
 | Order | Costas arrays | D4 orbits |
 |:---:|:---:|:---:|
