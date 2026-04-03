@@ -1,0 +1,41 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Costas Arrays
+message: >-
+  This project includes the data for Costas arrays of
+  various orders and code to verify or generate them.
+type: dataset
+authors:
+  - orcid: 'https://orcid.org/0009-0000-6779-8166'
+    affiliation: Undergrad at UPR-RP
+    email: sona@stau.space
+    given-names: Sona
+    name-particle: Tau
+    family-names: Estrada Rivera
+  - given-names: Gustavo
+    family-names: Torres Hance
+    affiliation: Undergrad at UPR-RP
+    email: enriquehance2@gmail.com
+  - given-names: Sergio
+    family-names: Rodríguez de Jesús
+    affiliation: Undergrad at UPR-RP
+repository-code: 'https://github.com/sona-tau/costas'
+url: 'https://github.com/sona-tau/costas/blob/master/README.md'
+repository: >-
+  https://github.com/sona-tau/costas/tree/master/CostasArrays.jl
+repository-artifact: 'https://github.com/sona-tau/costas/releases'
+abstract: >-
+  A database of Costas arrays and related combinatorial
+  data, with tools for computing and classifying them.
+keywords:
+  - costas
+  - permutation
+  - array
+  - julia
+  - data
+license: MIT
+commit: '2e59446'
+version: v2026.04
+date-released: '2026-04-01'

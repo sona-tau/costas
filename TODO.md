@@ -2,10 +2,10 @@
 
 - [ ] ask Sergio and Gustavo for author credits in `README.md`
 - [ ] upload counts to zenodo?
-- [ ] add `CITATION.cff`
+- [x] add `CITATION.cff`
     - more info: https://citation-file-format.github.io/
-- [ ] add `CHANGELOG.md`
-    - [ ] this file documents how the data looks and what changes are made
+- [x] add `CHANGELOG.md`
+    - this file documents how the data looks and what changes are made
 
 # Data
 

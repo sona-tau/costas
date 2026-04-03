@@ -119,3 +119,9 @@ make        # This builds the C++ search engine
 | 18 |       | 1892 |
 | 19 |       | 1283 |
 | 20 |       | 810 |
+
+# Credits
+
+This work has been done in collaboration with:
+- Gustavo Torres Hance @gustavbit
+- Sergio Rodríguez de Jesús @sergiodrd
