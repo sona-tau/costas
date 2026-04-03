@@ -11,17 +11,18 @@ import Serialization
 savevar(file_path::String, a) = Serialization.serialize(file_path, a)
 loadvar(file_path::String) = Serialization.deserialize(file_path)
 
-data_dir = get(ENV, "COSTAS_DATA", joinpath(@__DIR__, "../data"))
+const DATA_DIR = get(ENV, "COSTAS_DATA", joinpath(@__DIR__, "../data"))
 
 function fromtxt(s::String)::Vector{Vector{Int}}
     map.(Base.Fix1(parse, Int), split.(split(s, "\n"), " "))
 end
 
-function totxt(c::Vector{Vector{Integer}})::String
+function totxt(c::AbstractVector{AbstractVector{<:Integer}})::String
     join(join.(c, " "), "\n")
 end
 
 function opencostas(fpath::String)::Vector{Vector{Int}}
+    println("Opening: $(fpath)")
     out::Vector{Vector{Int}} = Vector{Vector{Int}}()
     open(fpath, "r") do file
         out = fromtxt(read(file, String))
