@@ -9,15 +9,15 @@
 
 # Data
 
-- [ ] compute arrays for orders 15 to 20 from orbits
+- [x] compute arrays for orders 15 to 20 from orbits
 - [ ] submit counts for orders 15 to 20 to OEIS
     - more info: https://oeis.org/A008404
 - [ ] bug: `data/costas_1x2.txt` is empty
-    - [ ] remove it from `data/`
-    - [ ] regenerate `SHA256SUMS`
+    - [x] remove it from `data/`
+    - [x] regenerate `SHA256SUMS`
     - [ ] make a new release
-- [ ] rename `classes_NxN.txt` to `orbits_NxN.txt`
-- [ ] add `src/julia/generate.jl`
+- [x] rename `classes_NxN.txt` to `orbits_NxN.txt`
+- [x] add `src/julia/generate.jl`
     - this file generates all the data
 - [ ] add `data/counts.csv`
 - [ ] add `data/README.md`
