@@ -51,7 +51,7 @@ in this case, the lexicographically smallest element of the orbit.
 """
 function canon(perm::AbstractVector{<:Integer})::Vector{Int}
 	n::Int = length(perm)
-	[[(a[1], a[2]), (n + 1 - a[2], a[1]), (n + 1 - a[1], n + 1 - a[2]), (a[2], n + 1 - a[1]), (a[1], n + 1 - a[2]), (n + 1 - a[1], a[2]), (a[2], a[1]), (n + 1 - a[2], n + 1 - a[1])] for a in topoints(p)] |>
+	[[(a[1], a[2]), (n + 1 - a[2], a[1]), (n + 1 - a[1], n + 1 - a[2]), (a[2], n + 1 - a[1]), (a[1], n + 1 - a[2]), (n + 1 - a[1], a[2]), (a[2], a[1]), (n + 1 - a[2], n + 1 - a[1])] for a in topoints(perm)] |>
 		Base.Fix1(reduce, hcat) |>
 		eachrow |>
 		minimum |>
