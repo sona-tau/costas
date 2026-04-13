@@ -18,7 +18,7 @@ function loadcostas(specs, datadir::String)
 
         file_path = datadir * (
             kind == :all    ? "costas_$(m)x$(n).txt" :
-            kind == :orbits || kind == :classes ? "classes_$(m)x$(n).txt" :
+            kind == :orbits || kind == :classes ? "orbits_$(m)x$(n).txt" :
             error("Unknown kind: $kind"))
 
         out = opencostas(file_path)
