@@ -1,4 +1,7 @@
-import Serialization
+include("../../CostasArrays.jl/src/io.jl")
+include("../../CostasArrays.jl/src/search.jl")
+include("../../CostasArrays.jl/src/symmetry.jl")
+include("../../CostasArrays.jl/src/verify.jl")
 
 # Combinators
 f1 = Base.Fix1
@@ -11,74 +14,8 @@ import Serialization
 savevar(file_path::String, a) = Serialization.serialize(file_path, a)
 loadvar(file_path::String) = Serialization.deserialize(file_path)
 
-const DATA_DIR = get(ENV, "COSTAS_DATA", joinpath(@__DIR__, "../data"))
-
-function fromtxt(s::String)::Vector{Vector{Int}}
-    map.(Base.Fix1(parse, Int), split.(split(s, "\n"), " "))
-end
-
-function totxt(c::AbstractVector{AbstractVector{<:Integer}})::String
-    join(join.(c, " "), "\n")
-end
-
-function opencostas(fpath::String)::Vector{Vector{Int}}
-    println("Opening: $(fpath)")
-    out::Vector{Vector{Int}} = Vector{Vector{Int}}()
-    open(fpath, "r") do file
-        out = fromtxt(read(file, String))
-    end
-    out
-end
-
-function load_costas(specs, datadir::String)
-    Dict(spec => begin
-        kind, m, n = spec
-
-        file_path = datadir * (
-            kind == :all    ? "costas_$(m)x$(n).txt" :
-            kind == :orbits || kind == :classes ? "classes_$(m)x$(n).txt" :
-            error("Unknown kind: $kind"))
-
-        out = opencostas(file_path)
-        println(file_path, " has ", length(out), " arrays.")
-        out
-    end for spec in specs)
-end
-
 function windows(z, w)
     ((@view z[i:i + w - 1]) for i in 1:length(z) - w + 1)
-end
-
-function isstab(a::Vector{<:Integer})::Bool
-    v = l -> l .|> x -> (-x % (length(l) + 1)) + length(l) + 1
-    t = l -> l |> tomatrix |> permutedims |> frommatrix
-    r = l -> l |> t |> v
-    a1 = a |> r
-    a2 = a |> r |> r
-    a3 = a |> r |> r |> r
-    a4 = a |> t
-    a5 = a1 |> t
-    a6 = a2 |> t
-    a7 = a3 |> t
-    e = a
-
-    e == a1 && e == a2 && e == a3 && e == a4 && e == a5 && e == a6 && e == a7
-end
-
-function class(a::Vector{<:Integer})::Vector{Vector{<:Integer}}
-    v = l -> l .|> x -> (-x % (length(l) + 1)) + length(l) + 1
-    t = l -> l |> tomatrix |> permutedims |> frommatrix
-    r = l -> l |> t |> v
-    a1 = a |> r
-    a2 = a |> r |> r
-    a3 = a |> r |> r |> r
-    a4 = a |> t
-    a5 = a1 |> t
-    a6 = a2 |> t
-    a7 = a3 |> t
-    e = a
-
-    [e, a1, a2, a3, a4, a5, a6, a7]
 end
 
 function stabilizers(c)
@@ -89,23 +26,6 @@ function stabilizers(c)
         end
     end
     sls
-end
-
-function classes(c)::Vector{Vector{Integer}}
-    cls = []
-    remaining = copy(c)
-    for l in c
-        push = true
-        for class in cls
-            if isequiv(l, class)
-                push = false
-            end
-        end
-        if push
-            push!(cls, l)
-        end
-    end
-    cls
 end
 
 function iscircperiodic(v::Vector{T})::Bool where T
@@ -125,40 +45,6 @@ function iscircperiodic(v::Vector{T})::Bool where T
                     end
                 end for (x, y) in windows(v, ws))
         end for ws in 2:(mod - 1))
-end
-
-function isequiv(e::Vector{<:Integer}, a::Vector{<:Integer})::Bool
-    v = l -> l .|> x -> (-x % (length(l) + 1)) + length(l) + 1
-    t = l -> l |> tomatrix |> permutedims |> frommatrix
-
-    r = l -> l |> t |> v
-
-    a1 = a |> r
-    a2 = a |> r |> r
-    a3 = a |> r |> r |> r
-    a4 = a |> t
-    a5 = a1 |> t
-    a6 = a2 |> t
-    a7 = a3 |> t
-
-    e == a || e == a1 || e == a2 || e == a3 || e == a4 || e == a5 || e == a6 || e == a7
-end
-
-function tomatrix(l::Vector{<:Integer})::Matrix{Integer}
-    acc = zeros(Int, length(l), length(l))
-    for i in 1:length(l)
-        e = l[i]
-        acc[i, e] = 1
-    end
-    acc
-end
-
-function frommatrix(m::Matrix{<:Integer})::Vector{Integer}
-    acc = []
-    for i in 1:(Int(sqrt(length(m))))
-        push!(acc, findindex(m[i, :], 1))
-    end
-    acc
 end
 
 function children(current::Vector{<:Integer})::Vector{Vector{Integer}}
@@ -223,46 +109,6 @@ function dfs(current::Vector{<:Integer})::Vector{Integer}
     longest
 end
 
-
-function iscostashelper2(lst::Vector{T}, f::Function, n::Integer)::Bool where T
-    all(begin
-        seen::Vector{Bool} = zeros(Bool, 2 * n)
-        all(begin
-                result = f(lst[i + k], lst[i], n)
-                result == 0 ? true : begin
-                        prev = seen[result]
-                        seen[result] = true
-                        !prev
-                    end
-            end for i ∈ 1:(n - k))
-        end for k ∈ 1:n)
-end
-
-function astmap(a::T, f) where T
-    a == '*' ? '*' : f(a)
-end
-
-function astbimap(a::T, b::T, f) where T
-    a == '*' || b == '*' ? '*' : f(a, b)
-end
-
-function astconst(a::T, b::U, c::U) where {T, U}
-    a == '*' ? b : c
-end
-
-function normal_predicate(x::T, y::T, n::Integer)::Integer where T
-    x - y + n
-end
-
-function asterisk_predicate(x::T, y::T, n::Integer)::Integer where T
-    x == '*' || y == '*' ? n : x - y + n
-end
-
-# Check if a sequence is a Costas sequence
-function iscostas(lst::Vector{T}, f::Function = normal_predicate)::Bool where T
-    length(unique(lst)) == length(lst) && iscostashelper2(lst, f, length(lst))
-end
-
 # Check whether alpha is a primitive root for a given prime
 function isprimitiveroot(prime::Integer, alpha::Integer)::Bool 
     not_one::Bool = all(powermod(alpha, i, prime) != prime - 1 for i in 1:((prime - 1) ÷ 2 - 1))
@@ -296,48 +142,6 @@ function lempel(prime::Integer)::Vector{Vector{Integer}}
     welch(prime) .|> lst -> init(lst) .|> n -> findindex(lst, prime + 1 - n)
 end
 
-# Check if a sequence is a Costas sequence with debug information
-function iscostasdbg(lst::Vector, f::Function = (x, y, n) -> x - y + n)::Bool
-    if size(unique(lst), 1) != size(lst, 1)
-        # println("No: repeated rows.")
-        return false
-    end
-    n = length(lst)
-    flag = false
-    for k in 1:n
-        diffs = [false for _ = 1:(2 * n - 1)]
-        if flag
-            continue
-        end
-        for i in 1:(n - k)
-            a = lst[(i + k) % n + 1]
-            b = lst[i]
-            result = f(a, b, n)
-            # print(result, ' ')
-            if diffs[result]
-                # println()
-                # println("No: same difference for a = $(a), b = $(b), result = $(result)")
-                # println("diffs = $(diffs)")
-                return false
-            elseif result != n
-                diffs[result] = true
-            end
-            flag = diffs[result]
-        end
-        # println()
-    end
-    return flag
-end
-
 function searchnaive(n::Integer)::Vector{Vector{Integer}}
     1:n |> permutations |> Filter(iscostas) |> collect
-end
-
-function some(l::Vector)::Bool
-    for e in l
-        if e
-            return true
-        end
-    end
-    return false
 end
