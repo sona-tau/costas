@@ -122,6 +122,17 @@
 					python312Packages.venvShellHook
 					python312Packages.z3-solver
 					sage
+
+					# For tests:
+					clojure
+					gfortran
+					gnuapl
+					go
+					haskell.compiler.ghcHEAD
+					deno
+					octave
+					R
+					rustc
 				] ++ (if system == "aarch64-darwin" then [ ] else [ gdb ]);
 			};
 		});

@@ -40,6 +40,7 @@
 
 - [ ] add `BenchmarkTools.jl` benchmark suite in `benchmarks/`
 - [ ] add `notebooks/julia/profiling.ipynb`
+- [ ] migrate `iscostas` from Julia implementation to C++.
 
 # CostasArrays.jl package
 
@@ -52,23 +53,23 @@
     - each file has the implementation that checks whether an array is a Costas array.
     - each file, when executed, will read a number `N` the order and then `N` positive integers and output `1` or `0` depending on if the list of positive integers was a Costas array or not repectively.
 - [ ] Write `is_costas.ext` for:
-    - [ ] Python
-    - [ ] C
-    - [ ] Haskell
-    - [ ] Julia
-    - [ ] Sage
-    - [ ] Rust
-    - [ ] C++
-    - [ ] R
+    - [x] Python
+    - [x] C
+    - [x] Haskell
+    - [x] Julia
+    - [x] Sage
+    - [x] Rust
+    - [x] C++
+    - [x] R
     - [ ] APL
     - [ ] J
     - [ ] BQN
-    - [ ] Javascript
-    - [ ] Go
-    - [ ] Fortran
-    - [ ] Clojure
-    - [ ] Octave (covers MATLAB)
-- [ ] add `verify/test.sh`
+    - [x] Javascript
+    - [x] Go
+    - [x] Fortran
+    - [x] Clojure
+    - [x] Octave (covers MATLAB)
+- [x] add `verify/test.sh`
     - this file tests each implementation against all of the data to see if they agree
 
 # Future
