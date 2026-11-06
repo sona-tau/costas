@@ -61,7 +61,7 @@ case "$EXT" in
 	c)
 		check_command clang
 		gum log -l info -t ansic "Compiling $SOURCE"
-		clang "$SOURCE" -o "$BUILD_DIR/iscostas"
+		cc -O3 -march=native -std=gnu11 "$SOURCE" -o "$BUILD_DIR/iscostas"
 		COMMAND="$BUILD_DIR/iscostas"
 		;;
 	cc)
