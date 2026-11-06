@@ -1,10 +1,18 @@
 name = "CostasArrays"
 uuid = "5c5e4aff-1c64-4f1a-9481-87489cf2de4b"
-version = "0.1.0"
 authors = ["Sona Tau Estrada Rivera <sona@stau.space>"]
+version = "0.1.0"
 
 [deps]
+GaloisFields = "8d0d7f98-d412-5cd4-8397-071c807280aa"
+Primes = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
 Transducers = "28d57a85-8fef-5791-bfe6-a80928e7c999"
 
 [compat]
 julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

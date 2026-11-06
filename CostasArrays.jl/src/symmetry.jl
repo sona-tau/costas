@@ -60,6 +60,37 @@ function canon(perm::AbstractVector{<:Integer})::Vector{Int}
 end
 
 """
+    iscanonical(perm) -> Bool
+
+Return `true` if `perm` is already the canonical (lex-smallest) representative
+of its D4 orbit. Equivalent to `canon(perm) == perm` but avoids allocating the
+full orbit: only one `invperm` call is needed.
+"""
+function iscanonical(perm::AbstractVector{<:Integer})::Bool
+    n = length(perm)
+    inv = invperm(perm)
+    # For each non-identity transform T, check perm ≤ T lex.
+    # Short-circuits on first differing element: returns true if perm[k] < T[k],
+    # false if perm[k] > T[k], continues otherwise.
+    function leq(get_t::F)::Bool where {F}
+        @inbounds for i in 1:n
+            a = perm[i]
+            b = get_t(i)
+            a < b && return true
+            a > b && return false
+        end
+        true
+    end
+    leq(i -> inv[n+1-i]) &&
+    leq(i -> n+1-perm[n+1-i]) &&
+    leq(i -> n+1-inv[i]) &&
+    leq(i -> n+1-perm[i]) &&
+    leq(i -> perm[n+1-i]) &&
+    leq(i -> inv[i]) &&
+    leq(i -> n+1-inv[n+1-i])
+end
+
+"""
 	isstabilized(perm::AbstractVector{<:Integer})::Bool
 
 Return `true` if `perm` gets fixed by at least one non-identity element of the
@@ -95,6 +126,12 @@ function classes(c::AbstractVector{AbstractVector{<:Integer}})::Vector{Vector{In
 	cls
 end
 
+"""
+	stabilizers(c) -> Vector
+
+Return all arrays in `c` that are stabilized by at least one non-identity
+element of the D4 action (i.e. arrays with non-trivial symmetry).
+"""
 function stabilizers(c)
 	c |> Filter(isstabilized) |> collect
 end

@@ -35,35 +35,3 @@ function iscostas(perm::AbstractVector{<:Integer})::Bool
 	    end for k in 1:(n - 1))
 end
 
-# Check whether alpha is a primitive root for a given prime
-function isprimitiveroot(prime::Integer, alpha::Integer)::Bool 
-    not_one::Bool = all(powermod(alpha, i, prime) != prime - 1 for i in 1:((prime - 1) ÷ 2 - 1))
-    last_one::Bool = powermod(alpha, (prime - 1) ÷ 2, prime) == prime - 1
-    not_one && last_one
-end
-
-# Find all primitive roots for a given prime
-function primitiveroots(prime::Integer)::Vector{Integer}
-    2:prime |> Filter(f1(isprimitiveroot, prime)) |> collect
-end
-
-# Construct all welch sequences for a given prime
-function welch(prime::Integer)::Vector{Vector{Integer}}
-    primitiveroots(prime) .|> root -> 1:(prime - 1) .|> power -> powermod(root, power, prime)
-end
-#
-# Find the index of elem in vec, else returns the size of vec
-function findindex(vec::Vector{T}, elem::T)::Integer where T
-    res = findfirst(==(elem), vec)
-    res != nothing ? res : length(vec)
-end
-
-# Return a vector except the last element
-function init(lst::Vector{T})::Vector{T} where T
-    collect(Iterators.take(lst, length(lst) - 1))
-end
-
-# Construct all lempel sequences for a given prime
-function lempel(prime::Integer)::Vector{Vector{Integer}}
-    welch(prime) .|> lst -> init(lst) .|> n -> findindex(lst, prime + 1 - n)
-end
