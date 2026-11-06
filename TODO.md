@@ -22,8 +22,8 @@
 - [x] add `data/counts.csv`
 - [ ] add `data/README.md`
     - this file explains the file format, naming conventions, how to verify and the remaining orders to be computed
-- [ ] add `data/labels.csv`
-    - [ ] verify that labels are mutually exclusive, if not, then the shape of the file has to have 1 column per label and a boolean flag marking whether that array meets the criteria
+- [x] add `data/labels.csv`
+    - [x] verify that labels are mutually exclusive, if not, then the shape of the file has to have 1 column per label and a boolean flag marking whether that array meets the criteria
     - a CSV with a column for an array and a column for a label
         - `L`: produced by the Lempel construction
         - `G`: produced by the Lempel-Golomb construction
@@ -44,8 +44,8 @@
 
 # CostasArrays.jl package
 
-- [ ] write `test/runtests.jl` with known Costas arrays
-- [ ] finish docstrings
+- [x] write `test/runtests.jl` with known Costas arrays
+- [x] finish docstrings
 
 # verify/
 
@@ -73,6 +73,13 @@
     - this file tests each implementation against all of the data to see if they agree
 
 # Future
+
+## SAT encoding
+
+- [ ] encode the Costas property as a SAT/constraint problem
+    - the Costas property (all difference vectors distinct) maps naturally to an all-different constraint over derived variables
+    - candidate solvers: Glucose, CaDiCaL (SAT); OR-Tools, Chuffed (CP)
+    - potential speedup: modern SAT/CP solvers have very effective propagation that may outperform hand-written backtracking
 
 ## GPU
 
